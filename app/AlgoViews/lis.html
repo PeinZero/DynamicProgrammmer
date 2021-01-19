@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Longest Increasing Subsequence</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="heading">
+            <h1>Select Any Sample Input</h1>
+        </div>
+        <hr class="line">
+        <ul class="sampleContainer">
+            
+            
+        </ul>
+        <div class="heading" style="margin-top:70px">
+            <h1>Output</h1>
+        </div>
+        <hr class="line">
+        <div class="output">
+            <div>Length of LIS:<span id="final-output"></span></div>
+        </div>
+    </div>
+    <script>
+        const {ipcRenderer} = require('electron')
+        var samples = require('../AlgoSampleInputs/LisMcm.json')
+        const ul = document.querySelector('.sampleContainer')
+
+        var count = 0
+        samples.forEach( singleSample => {
+            const li = document.createElement('li')
+            const div = document.createElement('div')
+            count = count + 1
+            div.innerHTML = 'sequence: ' + singleSample.sample
+            id = "div" + count
+            div.setAttribute("id", id)
+            li.appendChild(div)
+            li.className = 'sample s' + count
+            ul.appendChild(li);
+        })
+
+        const box = document.querySelector(".sampleContainer")
+
+        box.addEventListener('click' , e => {
+            if (e.target.className !=='sampleContainer'){
+                if (e.target.className === 'sample s1' || e.target.id ==='div1'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"LIS",
+                        content:samples[0],
+                    })
+                }
+                else if (e.target.className === 'sample s2' || e.target.id ==='div2'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"LIS",
+                        content:samples[1],
+                    })
+                }
+                else if (e.target.className === 'sample s3' || e.target.id ==='div3'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"LIS",
+                        content:samples[2],
+                    })
+                }
+                else if (e.target.className === 'sample s4' || e.target.id ==='div4'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"LIS",
+                        content:samples[3],
+                    })
+                }
+                else if (e.target.className === 'sample s5' || e.target.id ==='div5'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"LIS",
+                        content:samples[4],
+                    })
+                }
+                else if (e.target.className === 'sample s6' || e.target.id ==='div6'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"LIS",
+                        content:samples[5],
+                    })
+                }
+                else if (e.target.className === 'sample s7' || e.target.id ==='div7'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"LIS",
+                        content:samples[6],
+                    })
+                }
+                else if (e.target.className === 'sample s8' || e.target.id ==='div8'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"LIS",
+                        content:samples[7],
+                    })
+                }
+                else if (e.target.className === 'sample s9' || e.target.id ==='div9'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"LIS",
+                        content:samples[8],
+                    })
+                }
+                else if (e.target.className === 'sample s10' || e.target.id ==='div10'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"LIS",
+                        content:samples[9],
+                    })
+                }
+                
+            }
+        })
+
+        ipcRenderer.on('lis:done' , (e,answer) => {
+            document.getElementById('final-output').innerHTML = answer
+            
+        })
+
+    </script>
+</body>
+</html>

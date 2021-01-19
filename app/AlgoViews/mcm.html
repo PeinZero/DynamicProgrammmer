@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Shortest Common Subsequence</title>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Not to be tampered with without asking -->
+        <div class="heading">
+            <h1>Select Any Sample Input</h1>
+        </div>
+        <hr class="line">
+
+        <ul class="sampleContainer">
+            <!-- dynamically building -->
+        </ul>
+
+        <!-- Not to be tampered with without asking -->
+        <div class="heading" style="margin-top:70px">
+            <h1>Output</h1>
+        </div>
+        <hr class="line">
+        <div class="output">
+            <!-- AREA :  A.Nigga -->
+            <div>SCS:<span id="final-output"></span></div>
+            <div>Length:<span id="final-length"></span> </div>
+            <!-- basically selecting these empty span tags with id and filling them with answers -->
+        </div>
+    </div>
+    <script>
+        const {ipcRenderer} = require('electron')
+        // importing json files with input samples
+        var samples = require('../AlgoSampleInputs/LcsScsLd.json')
+
+        // selecting ul to be dynamically build using DOM
+        const ul = document.querySelector('.sampleContainer')
+
+        var count = 0
+
+        // for each object in samples.....samples is a list of objects
+        samples.forEach( singleSample => {
+            
+            // to differentiate between different tags i.e div, li 
+            count = count + 1
+
+            //making a li tag to insert inside ul
+            const li = document.createElement('li')
+
+            // making div to insert inside li tag
+            const div1 = document.createElement('div')
+            const div2 = document.createElement('div')
+
+            // adding content in div tag
+            div1.innerHTML = 'string1: ' + singleSample.str1
+            div2.innerHTML = 'string2: ' + singleSample.str2
+
+            // giving div's a id
+            var id1 = 'div1' + count;
+            var id2 = 'div2' + count;
+            div1.setAttribute("id", id1)
+            div2.setAttribute("id", id2)
+
+            // inserting div's in li 
+            li.appendChild(div1)
+            li.appendChild(div2)
+
+            // give li a class name... css is applied on sample and s+count to access classes i.e s1
+            li.className = 'sample s' + count
+
+            // insert li in ul
+            ul.appendChild(li);
+        })
+
+        // using DOM to select the ul that was dynamically build and stored its info in variable box
+        const box = document.querySelector(".sampleContainer")
+
+        // listening click event on box
+        box.addEventListener('click' , e => {
+            if (e.target.className !=='sampleContainer'){
+
+                // if clicked on li or div's inside connect ....change flow from here to main.js
+                if (e.target.className === 'sample s1' || e.target.id ==='div11' ||  e.target.id ==='div21'){
+                    ipcRenderer.send('ExecuteAlgo', {   // go to Excecute Algo in main.js
+                        algo:"SCS",  // Initials of algo in this case algo:"MCM"
+                        content:samples[0],  // sending the input sample selected by user to main.js
+                    })
+
+                    // basically sending a dict 
+                    //  *curly bracket open* 
+                    //                  algo: "SCS" , 
+                    //                  content: *contains sample input selected bu user* 
+                    //  *curly bracket closed*
+                }
+                else if (e.target.className === 'sample s2' || e.target.id ==='div12' ||  e.target.id ==='div22'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[1],
+                    })
+                }
+                else if (e.target.className === 'sample s3' || e.target.id ==='div13' ||  e.target.id ==='div23'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[2],
+                    })
+                }
+                else if (e.target.className === 'sample s4' || e.target.id ==='div14' ||  e.target.id ==='div24'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[3],
+                    })
+                }
+                else if (e.target.className === 'sample s5' || e.target.id ==='div15' ||  e.target.id ==='div25'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[4],
+                    })
+                }
+                else if (e.target.className === 'sample s6' || e.target.id ==='div16' ||  e.target.id ==='div26'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[5],
+                    })
+                }
+                else if (e.target.className === 'sample s7' || e.target.id ==='div17' ||  e.target.id ==='div27'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[6],
+                    })
+                }
+                else if (e.target.className === 'sample s8' || e.target.id ==='div18' ||  e.target.id ==='div28'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[7],
+                    })
+                }
+                else if (e.target.className === 'sample s9' || e.target.id ==='div19' ||  e.target.id ==='div29'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[8],
+                    })
+                }
+                else if (e.target.className === 'sample s10' || e.target.id ==='div110' ||  e.target.id ==='div210'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[9],
+                    })
+                }
+            }
+        })
+
+        // return back here after executing the algorithms with the answer
+        ipcRenderer.on('scs:done' , (e,answer) => {
+
+            // -------did this because was getting array of characters as answer ..remove if not needed-------------------
+            var outputStr = ''
+            answer.forEach( letter =>{
+                outputStr = outputStr+letter
+            })
+            console.log(outputStr)
+            // --------------------------------------
+
+            // Change Area A.Nigga above in the HTML part according to the answer recieved.
+
+            // if the answer is something like a lenght or just a single value only ... removie if note needed
+            document.getElementById('final-output').innerHTML = outputStr
+
+            // if the answer is a string or something and it length needs to be displayed too then do this..removie if note needed
+            document.getElementById('final-output').innerHTML = outputStr
+            document.getElementById('final-length').innerHTML = outputStr.length
+            
+        })
+
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <title>Longest Common Subsequence</title>
 </head>
 <body>
@@ -21,13 +21,13 @@
         </div>
         <hr class="line">
         <div class="output">
-            <div>LCS:<span id="lcs-output"></span></div>
-            <div>Length:<span id="lcs-length"></span> </div>
+            <div>LCS:<span id="final-output"></span></div>
+            <div>Length:<span id="final-length"></span> </div>
         </div>
     </div>
     <script>
         const {ipcRenderer} = require('electron')
-        var samples = require('./AlgoSampleInputs/lcs.json')
+        var samples = require('../AlgoSampleInputs/LcsScsLd.json')
         const ul = document.querySelector('.sampleContainer')
 
         var count = 0
@@ -115,14 +115,14 @@
             }
         })
 
-        ipcRenderer.on('lcs:done' , (e,longestSequence) => {
+        ipcRenderer.on('lcs:done' , (e,answer) => {
             var outputStr = ''
-            longestSequence.forEach( letter =>{
+            answer.forEach( letter =>{
                 outputStr = outputStr+letter
             })
             console.log(outputStr)
-            document.getElementById('lcs-output').innerHTML = outputStr
-            document.getElementById('lcs-length').innerHTML = outputStr.length
+            document.getElementById('final-output').innerHTML = outputStr
+            document.getElementById('final-length').innerHTML = outputStr.length
             
         })
 

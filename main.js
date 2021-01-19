@@ -1,15 +1,32 @@
+// ---------------------------- THiS Area is not to be Tampered with-------------------------
 const path = require('path')
 const os = require('os')
 const { app, BrowserWindow, Menu, globalShortcut, ipcMain, shell, ipcRenderer } = require('electron')
-const { exception } = require('console')
+// -------------------------------------------------------------------------------------------------------
 
 
-// set environment
-process.env.NODE_ENV = 'development'
+// -------------------------import functions from .js files ------------------------
+const {longestCommonSubsequence} = require('./app/Algos/lcs.js');
+const {shortestCommonSupersequence} = require('./app/Algos/scs.js');
+const {levenshteinDistance} = require('./app/Algos/ld.js');
+const {LongestIncreasingSubsequence} = require('./app/Algos/lis.js');
+//---------------------------------------------------------------------------------------
+
+
+
+// ---------------------------- THiS Area is not to be Tampered with-------------------------
+
+process.env.NODE_ENV = 'development' // set environment
 
 const isDev = process.env.NODE_ENV !== 'production' ? true : false
 const isMac = process.platform === 'darwin' ? true : false //for checking macOS or not since we want this to be cross-platfrom app.
+//---------------------------------------------------------------------------------------
 
+
+
+// ---------------------------- Creation of Windows in this Section-------------------------
+
+// ---------------------------- THiS Area is not to be Tampered with-------------------------
 let mainWindow
 let aboutWindow
 
@@ -39,10 +56,12 @@ function createAboutWindow () {
     })
     aboutWindow.loadFile('./app/about.html')
 }
+// -------------------------------------------------------------------------------------------------------
 
-function createLCSWindow (){
-    LCSWindow = new BrowserWindow({
-        title: 'Longest Common Subsequence',
+
+// ------------------- Most probably, there won't be the need to change this area ------------------------
+function createAlgoWindow (algoName){
+    AlgoWindow = new BrowserWindow({
         width: 1500,
         height: 800,
         resizable: false,
@@ -50,9 +69,43 @@ function createLCSWindow (){
             nodeIntegration: true,
         },
     })
-    LCSWindow.loadFile('./app/lcs.html')
+    if (algoName === 'Longest Common Subsequence'){
+        AlgoWindow.loadFile('./app/AlgoViews/lcs.html')
+    }
+    else if (algoName === 'Shortest Common Supersequence'){
+        AlgoWindow.loadFile('./app/AlgoViews/scs.html')
+    }
+    else if (algoName === 'Levenshtein Distance'){
+        AlgoWindow.loadFile('./app/AlgoViews/ld.html')
+    }
+    else if (algoName === 'Longest Increasing Subsequence'){
+        AlgoWindow.loadFile('./app/AlgoViews/lis.html')
+    }
+    else if (algoName === 'Matrix Chain Multiplication'){
+        AlgoWindow.loadFile('./app/AlgoViews/mcm.html')
+    }
+    else if (algoName === '0-1-knapsack-problem'){
+        AlgoWindow.loadFile('./app/AlgoViews/kp.html')
+    }
+    else if (algoName === 'Partition-problem'){
+        AlgoWindow.loadFile('./app/AlgoViews/pp.html')
+    }
+    else if (algoName === 'Rod Cutting Problem'){
+        AlgoWindow.loadFile('./app/AlgoViews/rcp.html')
+    }
+    else if (algoName === 'Coin-change-making-problem'){
+        AlgoWindow.loadFile('./app/AlgoViews/ccp.html')
+    }
+    else if (algoName === 'Word Break Problem'){
+        AlgoWindow.loadFile('./app/AlgoViews/wbp.html')
+    }  
 }
+// -------------------------------------------------------------------------------------------------------
 
+// -------------------------------END of Window's Creation Section -----------------------------------------
+
+
+// ------------------------------ APP and MENU SECTION -----------------------------------------------
 app.on('ready' , () => {
     createMainWindow()
 
@@ -92,95 +145,86 @@ const menu = [
 
 ]
 
+// ------------------------------ END OF APP and MENU SECTION -----------------------------------------------
+
+
+
+
+
+//----------------------------------------------MAIN LOGIC SECTION----------------------------------------
+
+// when you click on any algo in the Main Window, the control is transfered here
 ipcMain.on('OpenAlgo', (e,options) =>{
-    if (options.content === 'Longest Common Subsequence'){
-        createLCSWindow()
-    }
-    
+    createAlgoWindow(options.content)
+    // make a algo window depending on the algo selected
 })
 
+
+// when the user select a sample input in Algo Window, the conbrol is tranfered here
 ipcMain.on('ExecuteAlgo', (e,options) =>{
-    var set1 = options.content.str1
-    var set2 = options.content.str2
+    // a dict is recieved in options
+    // options.algo contain SELECTED algo name
+    // change variable: changeThisAccordingly name according to the type of answer algo return.
+
     if (options.algo === 'LCS'){
-        const lcsMatrix = Array(set2.length + 1)
-            .fill(null)
-            .map(() => Array(set1.length + 1).fill(null));
+        let longestSequence = longestCommonSubsequence(options.content.str1,options.content.str2)
 
-        for (let columnIndex = 0; columnIndex <= set1.length; columnIndex += 1) {
-            lcsMatrix[0][columnIndex] = 0;
-        }
-        for (let rowIndex = 0; rowIndex <= set2.length; rowIndex += 1) {
-            lcsMatrix[rowIndex][0] = 0;
-        }
-        for (let rowIndex = 1; rowIndex <= set2.length; rowIndex += 1) {
-            for (let columnIndex = 1; columnIndex <= set1.length; columnIndex += 1) {
-            if (set1[columnIndex - 1] === set2[rowIndex - 1]) {
-                lcsMatrix[rowIndex][columnIndex] =
-                lcsMatrix[rowIndex - 1][columnIndex - 1] + 1;
-            } else {
-                lcsMatrix[rowIndex][columnIndex] = Math.max(
-                lcsMatrix[rowIndex - 1][columnIndex],
-                lcsMatrix[rowIndex][columnIndex - 1]
-                );
-            }
-            }
-        }
+        // this sends the answer and the control back to the selected algo .html file and fill the output area in that html file with ans.
+        AlgoWindow.webContents.send('lcs:done' , longestSequence)
 
-        if (!lcsMatrix[set2.length][set1.length]) {
-            return [""];
-        }
+        // i.e 'lcs-done specifies the area to shift control to with the answer
+        // the next parameter the answer itself
 
-        const longestSequence = [];
-        let columnIndex = set1.length;
-        let rowIndex = set2.length;
+    }
+    else if (options.algo === 'SCS'){
+        let superSequence = shortestCommonSupersequence(options.content.str1,options.content.str2)
+        AlgoWindow.webContents.send('scs:done' , superSequence)
+    }
+    else if (options.algo === 'LD'){
+        let editDistance = levenshteinDistance(options.content.str1,options.content.str2)
+        AlgoWindow.webContents.send('ld:done' , editDistance)
+    }
+    else if (options.algo === 'LIS'){
+        let lengthLis = LongestIncreasingSubsequence(options.content.sample)
+        AlgoWindow.webContents.send('lis:done' , lengthLis)
+    }
 
-        while (columnIndex > 0 || rowIndex > 0) {
-            if (set1[columnIndex - 1] === set2[rowIndex - 1]) {
-            longestSequence.unshift(set1[columnIndex - 1]);
-            columnIndex -= 1;
-            rowIndex -= 1;
-            } else if (
-            lcsMatrix[rowIndex][columnIndex] === lcsMatrix[rowIndex][columnIndex - 1]
-            ) {
-            columnIndex -= 1;
-            } else {
-            rowIndex -= 1;
-            }
-        }
-        LCSWindow.webContents.send('lcs:done' , longestSequence)
+    // from here onward changes will be needed
+    else if (options.algo === 'MCM'){
+        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
+        AlgoWindow.webContents.send('mcm:done' , changeThisAccordingly)
+    }
+    else if (options.algo === 'KP'){
+        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
+        AlgoWindow.webContents.send('kp:done' , changeThisAccordingly)
+    }
+    else if (options.algo === 'PP'){
+        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
+        AlgoWindow.webContents.send('pp:done' , changeThisAccordingly)
+    }
+    else if (options.algo === 'RCP'){
+        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
+        AlgoWindow.webContents.send('rcp:done' , changeThisAccordingly)
+    }
+    else if (options.algo === 'CCP'){
+        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
+        AlgoWindow.webContents.send('ccp:done' , changeThisAccordingly)
+    }
+    else if (options.algo === 'WBP'){
+        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
+        AlgoWindow.webContents.send('wbp:done' , changeThisAccordingly)
     }
     
 })
-// ipcMain.on('image:minimize', (e,options) =>{
-//     options.dest = path.join(os.homedir(),'imageresizer') //destination path
-//     shrinkImage(options)
-// } )
 
-// async function shrinkImage({ imgPath, quality, dest }){
-    
-//     try {
-//         const pngQuality = quality/100
+// ---------------------------END OF MAIN LOGIC SECTION------------------------------------------------------
 
-//         const files = await imagemin([slash(imgPath)], {
-//             destination: dest,
-//             plugins: [
-//                 imageminMozjpeg({quality}),
-//                 imageminPngquant({
-//                     quality: [pngQuality, pngQuality ],
-//                 }),
-//             ],
-//         })
 
-//         // shell.openPath(dest) // to open destination folder after resizing
 
-//         // mainWindow.webContents.send('image:done') // send alert to index.html
-//     } catch (err) { // to catch an error
-//         // log.error(err)
-//         console.log(err)
-//     }
-// }
 
+
+// ------------------------------------LAST SECTION------------------------------------------
+// ---------------------------- THiS Area is not to be Tampered with-------------------------
 app.on('window-all-closed', () => {
     if (!isMac) {
       app.quit()
@@ -193,3 +237,5 @@ app.on('activate', () => {
   })
   
   app.allowRendererProcessReuse = true
+// ---------------------------------------------------------------------------------------------------
+// ---------------------------END OF LAST SECTION------------------------------------------------------

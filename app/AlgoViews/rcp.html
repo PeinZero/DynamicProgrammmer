@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Shortest Common Subsequence</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="heading">
+            <h1>Select Any Sample Input</h1>
+        </div>
+        <hr class="line">
+        <ul class="sampleContainer">
+            
+            
+        </ul>
+        <div class="heading" style="margin-top:70px">
+            <h1>Output</h1>
+        </div>
+        <hr class="line">
+        <div class="output">
+            <div>SCS:<span id="final-output"></span></div>
+            <div>Length:<span id="final-length"></span> </div>
+        </div>
+    </div>
+    <script>
+        const {ipcRenderer} = require('electron')
+        var samples = require('../AlgoSampleInputs/LcsScsLd.json')
+        const ul = document.querySelector('.sampleContainer')
+
+        var count = 0
+        samples.forEach( singleSample => {
+            const li = document.createElement('li')
+            const div1 = document.createElement('div')
+            const div2 = document.createElement('div')
+            count = count + 1
+            div1.innerHTML = 'string1: ' + singleSample.str1
+            div2.innerHTML = 'string2: ' + singleSample.str2
+            var id1 = 'div1' + count;
+            var id2 = 'div2' + count;
+            div1.setAttribute("id", id1)
+            div2.setAttribute("id", id2)
+            li.appendChild(div1)
+            li.appendChild(div2)
+            li.className = 'sample s' + count
+            ul.appendChild(li);
+        })
+
+        const box = document.querySelector(".sampleContainer")
+
+        box.addEventListener('click' , e => {
+            if (e.target.className !=='sampleContainer'){
+                if (e.target.className === 'sample s1' || e.target.id ==='div11' ||  e.target.id ==='div21'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[0],
+                    })
+                }
+                else if (e.target.className === 'sample s2' || e.target.id ==='div12' ||  e.target.id ==='div22'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[1],
+                    })
+                }
+                else if (e.target.className === 'sample s3' || e.target.id ==='div13' ||  e.target.id ==='div23'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[2],
+                    })
+                }
+                else if (e.target.className === 'sample s4' || e.target.id ==='div14' ||  e.target.id ==='div24'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[3],
+                    })
+                }
+                else if (e.target.className === 'sample s5' || e.target.id ==='div15' ||  e.target.id ==='div25'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[4],
+                    })
+                }
+                else if (e.target.className === 'sample s6' || e.target.id ==='div16' ||  e.target.id ==='div26'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[5],
+                    })
+                }
+                else if (e.target.className === 'sample s7' || e.target.id ==='div17' ||  e.target.id ==='div27'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[6],
+                    })
+                }
+                else if (e.target.className === 'sample s8' || e.target.id ==='div18' ||  e.target.id ==='div28'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[7],
+                    })
+                }
+                else if (e.target.className === 'sample s9' || e.target.id ==='div19' ||  e.target.id ==='div29'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[8],
+                    })
+                }
+                else if (e.target.className === 'sample s10' || e.target.id ==='div110' ||  e.target.id ==='div210'){
+                    ipcRenderer.send('ExecuteAlgo', {  
+                        algo:"SCS",
+                        content:samples[9],
+                    })
+                }
+            }
+        })
+
+        ipcRenderer.on('scs:done' , (e,answer) => {
+            var outputStr = ''
+            answer.forEach( letter =>{
+                outputStr = outputStr+letter
+            })
+            console.log(outputStr)
+            document.getElementById('final-output').innerHTML = outputStr
+            document.getElementById('final-length').innerHTML = outputStr.length
+            
+        })
+
+    </script>
+</body>
+</html>
