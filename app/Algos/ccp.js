@@ -1,32 +1,12 @@
-function makeChange(amount, coins) {
-    let cache = {};
-    if (!amount) {
-      return [];
+function minCoinChange(amount, coins) {
+  const minCoins = new Array(amount + 1).fill(Infinity); 
+  minCoins[0] = 0;
+  for(let coin of coins) {
+    for(let i = 0; i <= amount; i += 1) {
+      if((i - coin) >= 0) minCoins[i] = Math.min(minCoins[i], minCoins[i - coin] + 1);
     }
-  
-    if (cache[amount]) {
-      return cache[amount];
-    }
-  
-    let min = [],
-      newMin,
-      newAmount;
-    for (let i = 0; i < coins.length; i++) {
-      let coin = coins[i];
-      newAmount = amount - coin;
-      if (newAmount >= 0) {
-        newMin = makeChange(newAmount, coins);
-      }
-      if (
-        newAmount >= 0 &&
-        (newMin.length < min.length - 1 || !min.length) &&
-        (newMin.length || !newAmount)
-      ) {
-        min = [coin].concat(newMin);
-      }
-    }
-  
-    return (cache[amount] = min);
   }
-  
-module.exports = { makeChange }
+  return minCoins[amount] !== Infinity ? minCoins[amount] : -1;
+}
+
+module.exports = {minCoinChange}

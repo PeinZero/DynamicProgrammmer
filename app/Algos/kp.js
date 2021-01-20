@@ -1,4 +1,4 @@
-export default function knapSack(v, w, W) {
+function knapSack(v, w, W) {
     matrix = Array(v.length + 1)
       .fill(null)
       .map(() => Array(W + 1).fill(0));
@@ -31,10 +31,4 @@ export default function knapSack(v, w, W) {
     };
   }
   
-  v = [20, 5, 10, 40, 15, 25];
-  w = [1, 2, 3, 8, 7, 4];
-  W = 10;
-  console.log(knapSack(v, w, W));
-  
-
 module.exports = { knapSack }

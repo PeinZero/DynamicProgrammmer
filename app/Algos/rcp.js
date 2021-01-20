@@ -1,10 +1,21 @@
-export default function rodCut(price, n) {
-    matrix = Array(n + 1).fill(0);
-    for (let i=1; i<n+1; i++){
-        for (let j=1; j<i+1;j++){
-          matrix[i] = Math.max(matrix[i], price[j-1]+matrix[i-j])
-        }
-    }
-    return matrix[n]
+function RodCuttingProblem(prices, maxLength) {
+  //define base on rod length and its revenue
+  var r = [];
+  r[0] = 0;
+
+  //loop through the different lengths and determine max revenue
+  for(var i = 1; i <= maxLength; i++) {
+      //define a var to store the current max returned from recursion.
+      var currentMaxRevenue = 0;
+      for(var j = 1; j <= i; j++) {
+          var currentRevenue = prices[j - 1] + r[i - j];
+          if (currentRevenue > currentMaxRevenue) {
+              currentMaxRevenue = currentRevenue;
+          }
+      }
+      r[i] = currentMaxRevenue;
   }
-module.exports = { rodCut }
+  //finally return the max rev
+  return r[maxLength];
+}
+module.exports = { RodCuttingProblem }

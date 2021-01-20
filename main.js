@@ -10,6 +10,12 @@ const {longestCommonSubsequence} = require('./app/Algos/lcs.js');
 const {shortestCommonSupersequence} = require('./app/Algos/scs.js');
 const {levenshteinDistance} = require('./app/Algos/ld.js');
 const {LongestIncreasingSubsequence} = require('./app/Algos/lis.js');
+const {MatrixChainMultiplication} = require('./app/Algos/mcm.js');
+const {knapSack} = require('./app/Algos/kp.js');
+const {partition} = require('./app/Algos/pp.js');
+const {RodCuttingProblem} = require('./app/Algos/rcp.js');
+const {minCoinChange} = require('./app/Algos/ccp.js');
+const {wordBreak} = require('./app/Algos/wbp.js');
 //---------------------------------------------------------------------------------------
 
 
@@ -40,7 +46,7 @@ function createMainWindow () {
             nodeIntegration: true,
         },
     })
-    // mainWindow.setFullScreen(true)
+    mainWindow.setFullScreen(true)
     mainWindow.loadFile('./app/index.html')
 }
 
@@ -59,16 +65,17 @@ function createAboutWindow () {
 // -------------------------------------------------------------------------------------------------------
 
 
-// ------------------- Most probably, there won't be the need to change this area ------------------------
+// ------------------- Most probably, there won't be the need to change this area -------------------
 function createAlgoWindow (algoName){
     AlgoWindow = new BrowserWindow({
         width: 1500,
         height: 800,
-        resizable: false,
+        resizable: true,
         webPreferences: {
             nodeIntegration: true,
         },
     })
+    AlgoWindow.setFullScreen(true)
     if (algoName === 'Longest Common Subsequence'){
         AlgoWindow.loadFile('./app/AlgoViews/lcs.html')
     }
@@ -84,16 +91,16 @@ function createAlgoWindow (algoName){
     else if (algoName === 'Matrix Chain Multiplication'){
         AlgoWindow.loadFile('./app/AlgoViews/mcm.html')
     }
-    else if (algoName === '0-1-knapsack-problem'){
+    else if (algoName === '0/1 Knapsack Problem'){
         AlgoWindow.loadFile('./app/AlgoViews/kp.html')
     }
-    else if (algoName === 'Partition-problem'){
+    else if (algoName === 'Partition Problem'){
         AlgoWindow.loadFile('./app/AlgoViews/pp.html')
     }
     else if (algoName === 'Rod Cutting Problem'){
         AlgoWindow.loadFile('./app/AlgoViews/rcp.html')
     }
-    else if (algoName === 'Coin-change-making-problem'){
+    else if (algoName === 'Coin Change Problem'){
         AlgoWindow.loadFile('./app/AlgoViews/ccp.html')
     }
     else if (algoName === 'Word Break Problem'){
@@ -102,10 +109,10 @@ function createAlgoWindow (algoName){
 }
 // -------------------------------------------------------------------------------------------------------
 
-// -------------------------------END of Window's Creation Section -----------------------------------------
+// -------------------------------END of Window's Creation Section -------------------------------
 
 
-// ------------------------------ APP and MENU SECTION -----------------------------------------------
+// ------------------------------ APP and MENU SECTION ------------------------------
 app.on('ready' , () => {
     createMainWindow()
 
@@ -113,6 +120,13 @@ app.on('ready' , () => {
     Menu.setApplicationMenu(mainMenu)
 
     mainWindow.on('ready' , () => mainWindow = null)
+})
+
+ipcMain.on('back' , () =>{
+    mainWindow.close()
+    createMainWindow()
+    AlgoWindow.close()
+    
 })
 
 const menu = [
@@ -145,16 +159,17 @@ const menu = [
 
 ]
 
-// ------------------------------ END OF APP and MENU SECTION -----------------------------------------------
+// ------------------------------ END OF APP and MENU SECTION ------------------------------
 
 
 
 
 
-//----------------------------------------------MAIN LOGIC SECTION----------------------------------------
+//----------------------------------------------MAIN LOGIC SECTION----------------------------------------------
 
 // when you click on any algo in the Main Window, the control is transfered here
 ipcMain.on('OpenAlgo', (e,options) =>{
+    // console.log(options.content)
     createAlgoWindow(options.content)
     // make a algo window depending on the algo selected
 })
@@ -165,7 +180,7 @@ ipcMain.on('ExecuteAlgo', (e,options) =>{
     // a dict is recieved in options
     // options.algo contain SELECTED algo name
     // change variable: changeThisAccordingly name according to the type of answer algo return.
-
+    
     if (options.algo === 'LCS'){
         let longestSequence = longestCommonSubsequence(options.content.str1,options.content.str2)
 
@@ -189,30 +204,29 @@ ipcMain.on('ExecuteAlgo', (e,options) =>{
         AlgoWindow.webContents.send('lis:done' , lengthLis)
     }
 
-    // from here onward changes will be needed
     else if (options.algo === 'MCM'){
-        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
-        AlgoWindow.webContents.send('mcm:done' , changeThisAccordingly)
+        let operations = MatrixChainMultiplication(options.content.sample, options.content.sample.length)
+        AlgoWindow.webContents.send('mcm:done' , operations)
     }
     else if (options.algo === 'KP'){
-        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
-        AlgoWindow.webContents.send('kp:done' , changeThisAccordingly)
+        let maxprofit = knapSack(options.content.value, options.content.weight, options.content.maxWeight)
+        AlgoWindow.webContents.send('kp:done' , maxprofit)
     }
     else if (options.algo === 'PP'){
-        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
-        AlgoWindow.webContents.send('pp:done' , changeThisAccordingly)
+        let PossibleOrNot = partition(options.content.sample)
+        AlgoWindow.webContents.send('pp:done' , PossibleOrNot)
     }
     else if (options.algo === 'RCP'){
-        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
-        AlgoWindow.webContents.send('rcp:done' , changeThisAccordingly)
+        let maxprice = RodCuttingProblem(options.content.price, options.content.maxLength)
+        AlgoWindow.webContents.send('rcp:done' , maxprice)
     }
     else if (options.algo === 'CCP'){
-        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
-        AlgoWindow.webContents.send('ccp:done' , changeThisAccordingly)
+        let minimumCoins = minCoinChange(options.content.desiredchange, options.content.coin)
+        AlgoWindow.webContents.send('ccp:done' , minimumCoins)
     }
     else if (options.algo === 'WBP'){
-        let changeThisAccordingly = LongestIncreasingSubsequence(options.content.sample)
-        AlgoWindow.webContents.send('wbp:done' , changeThisAccordingly)
+        let BreakPossible = wordBreak(options.content.tarname, options.content.word)
+        AlgoWindow.webContents.send('wbp:done' , BreakPossible)
     }
     
 })

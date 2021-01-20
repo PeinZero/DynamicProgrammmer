@@ -11,6 +11,7 @@
         <div class="heading">
             <h1>Select Any Sample Input</h1>
         </div>
+        <div class="back-btn">BACK</div>
         <hr class="line">
         <ul class="sampleContainer">
             
@@ -20,9 +21,10 @@
             <h1>Output</h1>
         </div>
         <hr class="line">
-        <div class="output">
+        <div class="output" id="down-here">
             <div>Levenshtein Distance:<span id="final-output"></span></div>
         </div>
+        <br>
     </div>
     <script>
         const {ipcRenderer} = require('electron')
@@ -44,7 +46,12 @@
             li.appendChild(div1)
             li.appendChild(div2)
             li.className = 'sample s' + count
+            li.setAttribute("onclick", "location.href = '#down-here' ")
             ul.appendChild(li);
+        })
+
+        document.querySelector(".back-btn").addEventListener('click' , e =>{
+            ipcRenderer.send('back')
         })
 
         const box = document.querySelector(".sampleContainer")

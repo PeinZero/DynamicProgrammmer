@@ -1,49 +1,39 @@
-export default function isWordBreakable(s, dict, answer) {
-    var strLen = s.length;
-    if (strLen === 0) {
-      console.log(answer);
-      return true;
-    } else {
-      var prefix = "";
-      for (var i = 0; i < strLen; i++) {
-        prefix += s.charAt(i);
-        if (dict.indexOf(prefix) > -1) {
-          answer += prefix + " ";
-          var suffix = s.slice(i + 1);
-          if (isWordBreakable(suffix, dict, answer)) {
-            return true;
-          }
-        }
-      }
+var wordBreak = function(s, wordDict) {
+  var dp = Array(s.length);
+  var map = {};
+  var res = [];
+
+  for (var i = 0; i < wordDict.length; i++) {
+    map[wordDict[i]] = true;
+  }
+
+  return find(s, map, dp, 0);
+};
+
+var find = function (s, map, dp, index) {
+  if (dp[index]) return dp[index];
+
+  var str = '';
+  var tmp = null;
+  var len = s.length;
+
+  dp[index] = [];
+
+  for (var i = index; i < len; i++) {
+    str = s.substring(index, i + 1);
+    if (!map[str]) continue;
+    if (i === len - 1) {
+      dp[index].push(str);
+      break;
+    }
+    tmp = find(s, map, dp, i + 1);
+    for (var j = 0; j < tmp.length; j++) {
+      dp[index].push(str + ' ' + tmp[j]);
     }
   }
-  
-  var inputStr = "Wordbreakproblem";
-  var inputDict = [
-    "this",
-    "th",
-    "is",
-    "famous",
-    "Word",
-    "break",
-    "b",
-    "r",
-    "e",
-    "a",
-    "k",
-    "br",
-    "bre",
-    "brea",
-    "ak",
-    "problem",
-  ];
-  
-  if (!isWordBreakable(inputStr, inputDict, "")) {
-    console.log("String can not broken.");
-  }
-  
 
+  // console.log(dp[index]);
+  return dp[index];
+};
 
-
-
-module.exports = { notSure }
+module.exports = {wordBreak,find}

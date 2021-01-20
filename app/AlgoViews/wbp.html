@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <title>Shortest Common Subsequence</title>
+    <title>Word Break Problem</title>
 </head>
 <body>
     <div class="wrapper">
         <div class="heading">
             <h1>Select Any Sample Input</h1>
         </div>
+        <div class="back-btn">BACK</div>
         <hr class="line">
         <ul class="sampleContainer">
             
@@ -20,14 +21,14 @@
             <h1>Output</h1>
         </div>
         <hr class="line">
-        <div class="output">
-            <div>SCS:<span id="final-output"></span></div>
-            <div>Length:<span id="final-length"></span> </div>
+        <div class="output" id="down-here">
+            <div>Result:<span id="final-output"></span></div>
         </div>
+        <br>
     </div>
     <script>
         const {ipcRenderer} = require('electron')
-        var samples = require('../AlgoSampleInputs/LcsScsLd.json')
+        var samples = require('../AlgoSampleInputs/Wbp.json')
         const ul = document.querySelector('.sampleContainer')
 
         var count = 0
@@ -36,8 +37,8 @@
             const div1 = document.createElement('div')
             const div2 = document.createElement('div')
             count = count + 1
-            div1.innerHTML = 'string1: ' + singleSample.str1
-            div2.innerHTML = 'string2: ' + singleSample.str2
+            div1.innerHTML = 'Dictionary: ' + singleSample.word
+            div2.innerHTML = 'Target: ' + singleSample.tarname
             var id1 = 'div1' + count;
             var id2 = 'div2' + count;
             div1.setAttribute("id", id1)
@@ -45,7 +46,12 @@
             li.appendChild(div1)
             li.appendChild(div2)
             li.className = 'sample s' + count
+            li.setAttribute("onclick", "location.href = '#down-here' ")
             ul.appendChild(li);
+        })
+
+        document.querySelector(".back-btn").addEventListener('click' , e =>{
+            ipcRenderer.send('back')
         })
 
         const box = document.querySelector(".sampleContainer")
@@ -54,76 +60,78 @@
             if (e.target.className !=='sampleContainer'){
                 if (e.target.className === 'sample s1' || e.target.id ==='div11' ||  e.target.id ==='div21'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"SCS",
+                        algo:"WBP",
                         content:samples[0],
                     })
                 }
                 else if (e.target.className === 'sample s2' || e.target.id ==='div12' ||  e.target.id ==='div22'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"SCS",
+                        algo:"WBP",
                         content:samples[1],
                     })
                 }
                 else if (e.target.className === 'sample s3' || e.target.id ==='div13' ||  e.target.id ==='div23'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"SCS",
+                        algo:"WBP",
                         content:samples[2],
                     })
                 }
                 else if (e.target.className === 'sample s4' || e.target.id ==='div14' ||  e.target.id ==='div24'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"SCS",
+                        algo:"WBP",
                         content:samples[3],
                     })
                 }
                 else if (e.target.className === 'sample s5' || e.target.id ==='div15' ||  e.target.id ==='div25'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"SCS",
+                        algo:"WBP",
                         content:samples[4],
                     })
                 }
                 else if (e.target.className === 'sample s6' || e.target.id ==='div16' ||  e.target.id ==='div26'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"SCS",
+                        algo:"WBP",
                         content:samples[5],
                     })
                 }
                 else if (e.target.className === 'sample s7' || e.target.id ==='div17' ||  e.target.id ==='div27'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"SCS",
+                        algo:"WBP",
                         content:samples[6],
                     })
                 }
                 else if (e.target.className === 'sample s8' || e.target.id ==='div18' ||  e.target.id ==='div28'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"SCS",
+                        algo:"WBP",
                         content:samples[7],
                     })
                 }
                 else if (e.target.className === 'sample s9' || e.target.id ==='div19' ||  e.target.id ==='div29'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"SCS",
+                        algo:"WBP",
                         content:samples[8],
                     })
                 }
                 else if (e.target.className === 'sample s10' || e.target.id ==='div110' ||  e.target.id ==='div210'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"SCS",
+                        algo:"WBP",
                         content:samples[9],
                     })
                 }
             }
         })
 
-        ipcRenderer.on('scs:done' , (e,answer) => {
-            var outputStr = ''
-            answer.forEach( letter =>{
-                outputStr = outputStr+letter
-            })
-            console.log(outputStr)
-            document.getElementById('final-output').innerHTML = outputStr
-            document.getElementById('final-length').innerHTML = outputStr.length
-            
+        let temp = document.getElementById('final-output')
+        ipcRenderer.on('wbp:done' , (e,answer) => {
+            console.log(answer.length)
+            if(answer.length != 0){
+                temp.innerHTML = answer
+                temp.style.color = "green"
+            }
+            else{
+                temp.innerHTML = "Not Possible To Make The Word From Dictionary"
+                temp.style.color = "red"
+            }
         })
 
     </script>

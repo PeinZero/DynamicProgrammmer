@@ -17,6 +17,7 @@ function MatrixChainMultiplication(p, n) {
         }
       }
     }
+    // console.log(matrix[1][n-1])
     return matrix[1][n - 1];
   }
 module.exports = { MatrixChainMultiplication }
