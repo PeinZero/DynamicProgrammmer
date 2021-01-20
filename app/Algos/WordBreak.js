@@ -1,13 +1,27 @@
+const performance = require('perf_hooks').performance;
+
 var wordBreak = function(s, wordDict) {
   var dp = Array(s.length);
   var map = {};
   var res = [];
 
+  let start_time = performance.now();
+
   for (var i = 0; i < wordDict.length; i++) {
     map[wordDict[i]] = true;
   }
 
-  return find(s, map, dp, 0);
+let result = find(s, map, dp, 0);
+
+let end_time = performance.now();
+let timeDiff = end_time - start_time;
+timeDiff /= 1000;
+this.time = timeDiff;
+
+return {
+  result: result,
+  time: timeDiff
+}
 };
 
 var find = function (s, map, dp, index) {
@@ -31,7 +45,6 @@ var find = function (s, map, dp, index) {
       dp[index].push(str + ' ' + tmp[j]);
     }
   }
-
   // console.log(dp[index]);
   return dp[index];
 };

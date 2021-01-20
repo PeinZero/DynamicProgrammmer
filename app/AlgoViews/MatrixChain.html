@@ -4,44 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <title>Longest Increasing Subsequence</title>
+    <title>Matrix Chain Multiplication</title>
 </head>
 <body>
     <div class="wrapper">
+        <!-- Not to be tampered with without asking -->
         <div class="heading">
             <h1>Select Any Sample Input</h1>
         </div>
         <div class="back-btn">BACK</div>
         <hr class="line">
+
         <ul class="sampleContainer">
-            
-            
+            <!-- dynamically building -->
         </ul>
+
+        <!-- Not to be tampered with without asking -->
         <div class="heading" style="margin-top:70px">
             <h1>Output</h1>
         </div>
         <hr class="line">
         <div class="output" id="down-here">
-            <div>Length of LIS:<span id="final-output"></span></div>
+            <!-- AREA :  A.Nigga -->
+            <div>Min Operations:<span id="final-output"></span></div>
+            <div>Time Taken:<span id="final-time"></span> </div>
+            <!-- <div>Length:<span id="final-length"></span> </div> -->
+            <!-- basically selecting these empty span tags with id and filling them with answers -->
         </div>
         <br>
     </div>
     <script>
         const {ipcRenderer} = require('electron')
+        // importing json files with input samples
         var samples = require('../AlgoSampleInputs/LisMcmPp.json')
+
+        // selecting ul to be dynamically build using DOM
         const ul = document.querySelector('.sampleContainer')
 
         var count = 0
+
+        // for each object in samples.....samples is a list of objects
         samples.forEach( singleSample => {
-            const li = document.createElement('li')
-            const div = document.createElement('div')
+            
+            // to differentiate between different tags i.e div, li 
             count = count + 1
-            div.innerHTML = 'sequence: ' + singleSample.sample
-            id = "div" + count
+
+            //making a li tag to insert inside ul
+            const li = document.createElement('li')
+
+            // making div to insert inside li tag
+            const div = document.createElement('div')
+
+            // adding content in div tag
+            div.innerHTML = 'Dimensions: ' + singleSample.sample
+
+            // giving div's a id
+            var id = 'div' + count;
             div.setAttribute("id", id)
+
+            // inserting div's in li 
             li.appendChild(div)
+
+            // give li a class name... css is applied on sample and s+count to access classes i.e s1
             li.className = 'sample s' + count
             li.setAttribute("onclick", "location.href = '#down-here' ")
+
+            // insert li in ul
             ul.appendChild(li);
         })
 
@@ -49,76 +77,102 @@
             ipcRenderer.send('back')
         })
 
+        // using DOM to select the ul that was dynamically build and stored its info in variable box
         const box = document.querySelector(".sampleContainer")
 
+        // listening click event on box
         box.addEventListener('click' , e => {
             if (e.target.className !=='sampleContainer'){
+
+                // if clicked on li or div's inside connect ....change flow from here to main.js
                 if (e.target.className === 'sample s1' || e.target.id ==='div1'){
-                    ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"LIS",
-                        content:samples[0],
+                    ipcRenderer.send('ExecuteAlgo', {   // go to Excecute Algo in main.js
+                        algo:"MCM",  // Initials of algo in this case algo:"MCM"
+                        content:samples[0],  // sending the input sample selected by user to main.js
                     })
+
+                    // basically sending a dict 
+                    //  *curly bracket open* 
+                    //                  algo: "SCS" , 
+                    //                  content: *contains sample input selected bu user* 
+                    //  *curly bracket closed*
                 }
                 else if (e.target.className === 'sample s2' || e.target.id ==='div2'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"LIS",
+                        algo:"MCM",
                         content:samples[1],
                     })
                 }
                 else if (e.target.className === 'sample s3' || e.target.id ==='div3'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"LIS",
+                        algo:"MCM",
                         content:samples[2],
                     })
                 }
                 else if (e.target.className === 'sample s4' || e.target.id ==='div4'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"LIS",
+                        algo:"MCM",
                         content:samples[3],
                     })
                 }
                 else if (e.target.className === 'sample s5' || e.target.id ==='div5'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"LIS",
+                        algo:"MCM",
                         content:samples[4],
                     })
                 }
                 else if (e.target.className === 'sample s6' || e.target.id ==='div6'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"LIS",
+                        algo:"MCM",
                         content:samples[5],
                     })
                 }
                 else if (e.target.className === 'sample s7' || e.target.id ==='div7'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"LIS",
+                        algo:"MCM",
                         content:samples[6],
                     })
                 }
                 else if (e.target.className === 'sample s8' || e.target.id ==='div8'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"LIS",
+                        algo:"MCM",
                         content:samples[7],
                     })
                 }
                 else if (e.target.className === 'sample s9' || e.target.id ==='div9'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"LIS",
+                        algo:"MCM",
                         content:samples[8],
                     })
                 }
                 else if (e.target.className === 'sample s10' || e.target.id ==='div10'){
                     ipcRenderer.send('ExecuteAlgo', {  
-                        algo:"LIS",
+                        algo:"MCM",
                         content:samples[9],
                     })
                 }
-                
             }
         })
 
-        ipcRenderer.on('lis:done' , (e,answer) => {
-            document.getElementById('final-output').innerHTML = answer
+        // return back here after executing the algorithms with the answer
+        ipcRenderer.on('mcm:done' , (e,answer) => {
+
+            // -------did this because was getting array of characters as answer ..remove if not needed-------------------
+            //<!-- var outputStr = ''
+            //answer.forEach( letter =>{
+            //    outputStr = outputStr+letter
+            //})
+            //console.log(outputStr) -->
+            // --------------------------------------
+
+            // Change Area A.Nigga above in the HTML part according to the answer recieved.
+
+            // if the answer is something like a lenght or just a single value only ... removie if note needed
+            document.getElementById('final-output').innerHTML = answer.result
+            document.getElementById('final-time').innerHTML = answer.time
+            
+            // if the answer is a string or something and it length needs to be displayed too then do this..removie if note needed
+            
         })
 
     </script>

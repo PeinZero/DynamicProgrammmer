@@ -1,5 +1,10 @@
+const performance = require('perf_hooks').performance;
+
 function RodCuttingProblem(prices, maxLength) {
   //define base on rod length and its revenue
+  
+  let start_time = performance.now();
+
   var r = [];
   r[0] = 0;
 
@@ -16,6 +21,14 @@ function RodCuttingProblem(prices, maxLength) {
       r[i] = currentMaxRevenue;
   }
   //finally return the max rev
-  return r[maxLength];
+  let result = r[maxLength];
+  let end_time = performance.now();
+  let timeDiff = end_time - start_time;
+  timeDiff /= 1000;
+  this.time = timeDiff;
+  return {
+    result: result,
+    time: timeDiff
+  }
 }
 module.exports = { RodCuttingProblem }

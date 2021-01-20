@@ -1,3 +1,5 @@
+const performance = require('perf_hooks').performance;
+
 function subsetSum(arr, arrLength, total) {
   let matrix = Array(arrLength + 1)
     .fill(null)
@@ -22,8 +24,21 @@ function subsetSum(arr, arrLength, total) {
 }
 
 function partition(arr) {
+
+  let start_time = performance.now();
+
   let total = arr.reduce((a, b) => a + b, 0);
-  return (total & 1) == 0 && subsetSum(arr, arr.length, Math.round(total / 2));
+  let result =  (total & 1) == 0 && subsetSum(arr, arr.length, Math.round(total / 2));
+  let end_time = performance.now();
+  let timeDiff = end_time - start_time;
+
+  timeDiff /= 1000;
+  this.time = timeDiff;
+  
+  return {
+    result: result,
+    time: timeDiff
+  }
 }
 
 module.exports = {partition,subsetSum}

@@ -1,6 +1,10 @@
+const performance = require('perf_hooks').performance;
+
 function LongestIncreasingSubsequence(sequence) {
+
+  let start_time = performance.now();
+
     const lengthsArray = Array(sequence.length).fill(1);
-    console.log(lengthsArray)
     let previousElementIndex = 0;
     let currentElementIndex = 1;
   
@@ -27,7 +31,15 @@ function LongestIncreasingSubsequence(sequence) {
       }
     }
   
-    return longestIncreasingLength;
+  let result = longestIncreasingLength
+  let end_time = performance.now();
+  let timeDiff = end_time - start_time;
+  timeDiff /= 1000;
+  this.time = timeDiff;
+  return {
+    result: result,
+    time: timeDiff
   }
+}
   
 module.exports = { LongestIncreasingSubsequence }

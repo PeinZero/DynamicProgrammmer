@@ -1,4 +1,7 @@
+const performance = require('perf_hooks').performance;
+
 function longestCommonSubsequence(set1, set2) {
+  let start_time = performance.now();
     const lcsMatrix = Array(set2.length + 1)
       .fill(null)
       .map(() => Array(set1.length + 1).fill(null));
@@ -45,7 +48,15 @@ function longestCommonSubsequence(set1, set2) {
       }
     }
   
-    return longestSequence;
+    let result = longestSequence
+    let end_time = performance.now();
+    let timeDiff = end_time - start_time;
+    timeDiff /= 1000;
+    this.time = timeDiff;
+    return {
+      result: result,
+      time: timeDiff
+    }
   }
   
   module.exports = { longestCommonSubsequence }

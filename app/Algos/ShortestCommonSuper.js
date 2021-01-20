@@ -1,6 +1,10 @@
+const performance = require('perf_hooks').performance;
+
 function shortestCommonSupersequence(set1, set2) {
-    
-    const {longestCommonSubsequence} = require('./lcs.js');
+  
+  let start_time = performance.now();
+
+    const {longestCommonSubsequence} = require('./LongestCommon.js');
     const lcs = longestCommonSubsequence(set1, set2);
   
     if (lcs.length === 1 && lcs[0] === "") {
@@ -49,8 +53,16 @@ function shortestCommonSupersequence(set1, set2) {
     if (setIndex2 < set2.length) {
       supersequence = supersequence.concat(set2.slice(setIndex2));
     }
-  
-    return supersequence;
+    
+    let result =  supersequence;
+    let end_time = performance.now();
+    let timeDiff = end_time - start_time;
+    timeDiff /= 1000;
+    this.time = timeDiff;
+    return {
+      result: result,
+      time: timeDiff
+    }
   }
 
   module.exports = {shortestCommonSupersequence}

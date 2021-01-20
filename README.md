@@ -1,3 +1,24 @@
 # Dynamic Programmer
 
 ### Desktop App which solves some common problems using Dynamic Programming.
+
+
+How to install
+---------------------------------------------------------------------------------------------------------------------------------
+To run this project all node dependencies must be installed.  
+We have not included the dependencies in the project because the size was almost of 300mb  
+
+Steps:  
+1-Open terminal in the project folder that is located in Dynamic-Programmer  
+2-Run command "npm install" in the terminal to install all the node modules  
+3-Run command "npm start" to run the project  
+
+To create a .exe file (package the application) run the command "npm run package-win"
+
+The .exe file will be created in the folder of release-builds/Dynamic-Programmer+build_name/DynamicProgrammer.exe  
+
+	relase-build
+		Dynamic-Programmer+build_name
+			Dynamic-Programmer.exe
+			
+---------------------------------------------------------------------------------------------------------------------------------
